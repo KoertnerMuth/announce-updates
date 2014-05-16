@@ -22,7 +22,7 @@ Es geht darum einen RSS Feed und eine Newsseite, die jeweils als File auf einem 
 - die Datei soll aber nicht gelöscht werden (umbennen in .bak wäre eine Möglichkeit)
 - beide RSS feeds sollen *ausschließlich* die aktuellste Version der Software enthalten (z.B. 14.03)
 - andere, nicht Versionsrelevante Elemente müssen unverändert erhalten bleiben.
-- RSS feeds sollen weiterhin [http://validator.w3.org/feed](W3C valide) sein.
+- RSS feeds sollen weiterhin [W3C valide](http://validator.w3.org/feed) sein.
 - beide HTML Dateien (in Contents) sollen an entsprechender stelle *auschließlich* die aktuelle Version enthalten
 - andere, nicht Versionsrelevante Elemente müssen unverändert erhalten bleiben.
 - falls das entsprechende <article> element sich nicht an oberster/erster Stelle im DOM befindet, soll es dorthin verschoben werden
