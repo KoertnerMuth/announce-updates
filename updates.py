@@ -1,4 +1,7 @@
 import os
+import xml.dom.minidom
+import time
+import datetime
 
 #Aktuelle Version init auf 0
 current_ver = 0
@@ -31,9 +34,9 @@ def getVer(path):
 def updateVer(Ver):
     """Ändere die angezeigte Version in RSS und HTML
     """
-    setHTMLVer(Ver, "de")
-    setHTMLVer(Ver, "en")
-    #setRSSVer(Ver, "de")
+    #setHTMLVer(Ver, "de")
+    #setHTMLVer(Ver, "en")
+    setRSSVer(Ver, "de")
     #setRSSVer(Ver, "en")
 
 def setHTMLVer(Ver, lang):
@@ -118,12 +121,34 @@ def setHTMLVer(Ver, lang):
         
         
 
-#def setRSSVer(Ver, lang):
-#    """Ändert die angezeigte Version in HTML und bewegt das <article>
-#    Element an oberste Stelle
-#    """
+def setRSSVer(Ver, lang):
+    """Ändert die angezeigte Version in HTML und bewegt das <article>
+    Element an oberste Stelle
+    """
+    ts = time.time()
+    pubDateFormat = datetime.datetime.fromtimestamp(ts).strftime('%a, %d %b %Y %H:%M:%S')
+
+    if (lang == "de"):
+        #TODO: Edit file_de to path RSSFILE_DE (without tmp)
+        file_de = open("tmp" + RSSFILE_DE, "w")
+        dom = xml.dom.minidom.parse(RSSFILE_DE)
+        root = dom.documentElement
+        channel = root.childNodes[1]
+        lastBDate = channel.getElementsByTagName("lastBuildDate")[0]
+        verItem = channel.getElementsByTagName("item")[0]
+        title = verItem.getElementsByTagName("title")[0].firstChild
+        title.replaceWholeText("Aktuelle LOCKBASE Version: %f" % (Ver,))
+        pubDate = verItem.getElementsByTagName("pubDate")[0].firstChild
+        pubDate.replaceWholeText(pubDateFormat)
+        descr = verItem.getElementsByTagName("description")[0].firstChild
+        descr.replaceWholeText("<p>Die aktuelle LOCKBASE Version %f steht ab jetzt für Sie zum Update bereit.</p>" % (Ver,))
+        print(descr)
+        print(descr.nodeValue)
+        print(verItem)
+        root.writexml(file_de)
     
 
 
-current_ver = getVer(PATH)
+#current_ver = getVer(PATH)
+current_ver = 66.666
 updateVer(current_ver)
