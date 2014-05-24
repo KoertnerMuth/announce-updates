@@ -37,9 +37,33 @@ def updateVer(Ver):
     #setHTMLVer(Ver, "de")
     #setHTMLVer(Ver, "en")
     setRSSVer(Ver, "de")
-    #setRSSVer(Ver, "en")
+    setRSSVer(Ver, "en")
 
 def setHTMLVer(Ver, lang):
+    """Andert die angezeigte Version in HTML
+    """
+    if (lang == "de"):
+        file_de = open(tmpHTMLFILE_DE, "w")
+        dom = xml.dom.minidom.parse(HTMLFILE_EN)
+        #RSS root node
+        #root = dom.documentElement
+        #section1 = root.getElementsByTagName("section")
+        
+            
+##        lastBDate = channel.getElementsByTagName("lastBuildDate")[0]
+##        verItem = channel.getElementsByTagName("item")[0]
+##        title = verItem.getElementsByTagName("title")[0].firstChild
+##        title.replaceWholeText("Aktuelle LOCKBASE Version: %f" % (Ver,))
+##        pubDate = verItem.getElementsByTagName("pubDate")[0].firstChild
+##        pubDate.replaceWholeText(pubDateFormat)
+##        descr = verItem.getElementsByTagName("description")[0].firstChild
+##        descr.replaceWholeText("<p>Die aktuelle LOCKBASE Version %f steht ab jetzt für Sie zum Update bereit.</p>" % (Ver,))
+##        print(descr)
+##        print(descr.nodeValue)
+##        print(verItem)
+##        root.writexml(file_de)
+
+def old_setHTMLVer(Ver, lang):
     """Ändert die angezeigte Version in HTML
     """
     verTime = time.gmtime(os.path.getmtime(PATH + str(Ver) + ".txt.bak"))
@@ -132,6 +156,7 @@ def setRSSVer(Ver, lang):
         #TODO: Edit file_de to path RSSFILE_DE (without tmp)
         file_de = open("tmp" + RSSFILE_DE, "w")
         dom = xml.dom.minidom.parse(RSSFILE_DE)
+        #RSS root node
         root = dom.documentElement
         channel = root.childNodes[1]
         lastBDate = channel.getElementsByTagName("lastBuildDate")[0]
@@ -142,6 +167,26 @@ def setRSSVer(Ver, lang):
         pubDate.replaceWholeText(pubDateFormat)
         descr = verItem.getElementsByTagName("description")[0].firstChild
         descr.replaceWholeText("<p>Die aktuelle LOCKBASE Version %f steht ab jetzt für Sie zum Update bereit.</p>" % (Ver,))
+        print(descr)
+        print(descr.nodeValue)
+        print(verItem)
+        root.writexml(file_de)
+
+    elif (lang == "en"):
+        #TODO: Edit file_de to path RSSFILE_EN (without tmp)
+        file_de = open("tmp" + RSSFILE_EN, "w")
+        dom = xml.dom.minidom.parse(RSSFILE_EN)
+        #RSS root node
+        root = dom.documentElement
+        channel = root.childNodes[1]
+        lastBDate = channel.getElementsByTagName("lastBuildDate")[0]
+        verItem = channel.getElementsByTagName("item")[0]
+        title = verItem.getElementsByTagName("title")[0].firstChild
+        title.replaceWholeText("Latest LOCKBASE Version: %f" % (Ver,))
+        pubDate = verItem.getElementsByTagName("pubDate")[0].firstChild
+        pubDate.replaceWholeText(pubDateFormat)
+        descr = verItem.getElementsByTagName("description")[0].firstChild
+        descr.replaceWholeText("<p>The latest LOCKBASE Version %f can be downloaded.</p>" % (Ver,))
         print(descr)
         print(descr.nodeValue)
         print(verItem)
