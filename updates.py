@@ -85,11 +85,11 @@ def old_setHTMLVer(Ver, lang):
 						</footer>
 						<header>
 							<h1>
-							  Aktuelle LOCKBASE Version: %f
+							  Aktuelle LOCKBASE Version: %0.2f
 							</h1>
 						</header>
 						<p>
-						  Die aktuelle LOCKBASE Version %f steht ab jetzt für Sie zum Update bereit. 
+						  Die aktuelle LOCKBASE Version %0.2f steht ab jetzt für Sie zum Update bereit. 
 						    <span class="more">
 						      <a href="@NAVI=GSupport">
 							mehr
@@ -121,11 +121,11 @@ def old_setHTMLVer(Ver, lang):
 						</footer>
 						<header>
 							<h1>
-								Latest LOCKBASE version:  %f
+								Latest LOCKBASE version:  %0.2f
 							</h1>
 						</header>
 						<p>
-							The latest LOCKBASE version is %f and can be downloaded  			
+							The latest LOCKBASE version is %0.2f and can be downloaded  			
 							<span class="more">
 							<a href="@NAVI=GSupport">
 								here
@@ -162,11 +162,11 @@ def setRSSVer(Ver, lang):
         lastBDate = channel.getElementsByTagName("lastBuildDate")[0]
         verItem = channel.getElementsByTagName("item")[0]
         title = verItem.getElementsByTagName("title")[0].firstChild
-        title.replaceWholeText("Aktuelle LOCKBASE Version: %f" % (Ver,))
+        title.replaceWholeText("Aktuelle LOCKBASE Version: %0.2f" % (Ver,))
         pubDate = verItem.getElementsByTagName("pubDate")[0].firstChild
         pubDate.replaceWholeText(pubDateFormat)
         descr = verItem.getElementsByTagName("description")[0].firstChild
-        descr.replaceWholeText("<p>Die aktuelle LOCKBASE Version %f steht ab jetzt für Sie zum Update bereit.</p>" % (Ver,))
+        descr.replaceWholeText("<p>Die aktuelle LOCKBASE Version %0.2f steht ab jetzt für Sie zum Update bereit.</p>" % (Ver,))
         print(descr)
         print(descr.nodeValue)
         print(verItem)
@@ -182,11 +182,11 @@ def setRSSVer(Ver, lang):
         lastBDate = channel.getElementsByTagName("lastBuildDate")[0]
         verItem = channel.getElementsByTagName("item")[0]
         title = verItem.getElementsByTagName("title")[0].firstChild
-        title.replaceWholeText("Latest LOCKBASE Version: %f" % (Ver,))
+        title.replaceWholeText("Latest LOCKBASE Version: %0.2f" % (Ver,))
         pubDate = verItem.getElementsByTagName("pubDate")[0].firstChild
         pubDate.replaceWholeText(pubDateFormat)
         descr = verItem.getElementsByTagName("description")[0].firstChild
-        descr.replaceWholeText("<p>The latest LOCKBASE Version %f can be downloaded.</p>" % (Ver,))
+        descr.replaceWholeText("<p>The latest LOCKBASE Version %0.2f can be downloaded.</p>" % (Ver,))
         print(descr)
         print(descr.nodeValue)
         print(verItem)
