@@ -42,27 +42,32 @@ def updateVer(Ver):
 def setHTMLVer(Ver, lang):
     """Andert die angezeigte Version in HTML
     """
+    verTime = time.gmtime(os.path.getmtime(PATH + str(Ver) + ".txt.bak"))
+    formatDatetime = "%i-%i-%i %i:%i" % (verTime.tm_year, verTime.tm_mon, verTime.tm_mday, verTime.tm_hour, verTime.tm_min)
+    formatDate = "%i.%i.%i" %(verTime.tm_mday, verTime.tm_mon, verTime.tm_year)
+    
     if (lang == "de"):
         file_de = open(tmpHTMLFILE_DE, "w")
         dom_file = open(HTMLFILE_DE, encoding='utf-8')
         dom = xml.dom.minidom.parse(dom_file)
         #RSS root node
-        #root = dom.documentElement
-        #section1 = root.getElementsByTagName("section")
+        root = dom.documentElement
+        for article in root.getElementsByTagName("article"):
+            if (article.hasAttribute("id")):
+                article0 = article
+                
+        timedate = article0.getElementsByTagName("time")[0]
+        timedate.setAttribute("datetime", formatDatetime)
+        timedate.firstChild.replaceWholeText(formatDate)
         
-            
-##        lastBDate = channel.getElementsByTagName("lastBuildDate")[0]
-##        verItem = channel.getElementsByTagName("item")[0]
-##        title = verItem.getElementsByTagName("title")[0].firstChild
-##        title.replaceWholeText("Aktuelle LOCKBASE Version: %f" % (Ver,))
-##        pubDate = verItem.getElementsByTagName("pubDate")[0].firstChild
-##        pubDate.replaceWholeText(pubDateFormat)
-##        descr = verItem.getElementsByTagName("description")[0].firstChild
-##        descr.replaceWholeText("<p>Die aktuelle LOCKBASE Version %f steht ab jetzt für Sie zum Update bereit.</p>" % (Ver,))
-##        print(descr)
-##        print(descr.nodeValue)
-##        print(verItem)
-##        root.writexml(file_de)
+        header = article0.getElementsByTagName("h1")[0]
+        header.firstChild.replaceWholeText("Aktuelle LOCKBASE Version: %0.2f" % (Ver,))
+
+        paragraph = article0.getElementsByTagName("p")[0]
+        paragraph.firstChild.replaceWholeText("Die aktuelle LOCKBASE Version %0.2f steht ab jetzt für Sie zum Update bereit." % (Ver,))
+        
+        root.writexml(file_de)
+
 
 def old_setHTMLVer(Ver, lang):
     """Ändert die angezeigte Version in HTML
