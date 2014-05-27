@@ -34,17 +34,18 @@ def getVer(path):
 def updateVer(Ver):
     """Ändere die angezeigte Version in RSS und HTML
     """
-    #setHTMLVer(Ver, "de")
+    setHTMLVer(Ver, "de")
     #setHTMLVer(Ver, "en")
-    setRSSVer(Ver, "de")
-    setRSSVer(Ver, "en")
+    #setRSSVer(Ver, "de")
+    #setRSSVer(Ver, "en")
 
 def setHTMLVer(Ver, lang):
     """Andert die angezeigte Version in HTML
     """
     if (lang == "de"):
         file_de = open(tmpHTMLFILE_DE, "w")
-        dom = xml.dom.minidom.parse(HTMLFILE_EN)
+        dom_file = open(HTMLFILE_DE, encoding='utf-8')
+        dom = xml.dom.minidom.parse(dom_file)
         #RSS root node
         #root = dom.documentElement
         #section1 = root.getElementsByTagName("section")
