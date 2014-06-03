@@ -1,12 +1,9 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 import os
 import xml.dom.minidom
 import time
 import datetime
 
-#Aktuelle Version init auf 0
-current_ver = 0
+
 recent_ver = 0
 PATH = "Support/RawBin/"
 HTMLFILE_DE = "Contents/GLBW.html"
@@ -41,8 +38,6 @@ def updateVer(Ver):
     setRSSVer(Ver, "de")
     setRSSVer(Ver, "en")
 
-    current_ver = Ver
-
 def setHTMLVer(Ver, lang):
     """Andert die angezeigte Version in HTML
     """
@@ -66,7 +61,8 @@ def setHTMLVer(Ver, lang):
     dom = xml.dom.minidom.parse(dom_file)
     #RSS root node
     root = dom.documentElement
-    for article in root.getElementsByTagName("article"):
+    articles = root.getElementsByTagName("article")
+    for article in articles:
         if (article.hasAttribute("id")):
             article0 = article
             break
@@ -82,6 +78,10 @@ def setHTMLVer(Ver, lang):
         elif node.nodeName == "p":
             paragraph = article0.getElementsByTagName("p")[0]
             paragraph.firstChild.replaceWholeText(ptxt)
+
+    firstArticle = articles[0]
+    firstArticle.parentNode.insertBefore(article0.cloneNode(True), firstArticle)
+    firstArticle.parentNode.removeChild(article0)
 
     file = open(srcHTML, "w")       
     root.writexml(file)
@@ -121,6 +121,7 @@ def setRSSVer(Ver, lang):
                     chNode.firstChild.replaceWholeText(pubDateFormat)
                 elif (chNode.nodeName == "description"):
                     chNode.firstChild.replaceWholeText(descrtxt)
+                break;
 
     file = open(srcRSS, "w")
     root.writexml(file)
@@ -128,6 +129,9 @@ def setRSSVer(Ver, lang):
     
 
 
-getVer(PATH)
-if (recent_ver > current_ver):
+recent_ver = getVer(PATH)
+#recent_ver = 66.6666
+if (recent_ver > 0):
     updateVer(recent_ver)
+else:
+    print("No update")
