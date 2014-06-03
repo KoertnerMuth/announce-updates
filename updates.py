@@ -5,6 +5,7 @@ import datetime
 
 #Aktuelle Version init auf 0
 current_ver = 0
+recent_ver = 0
 PATH = "Support/RawBin/"
 HTMLFILE_DE = "Contents/GLBW.html"
 HTMLFILE_EN = "Contents/ELBW.html"
@@ -18,17 +19,17 @@ def getVer(path):
     """Liest alle Dateinamen in Support/RawBin/ , um die aktuellste
     Version zu finden.
     """
-    recentVer = 0
+    recent_ver = 0
     filelist = os.listdir(path)
     for file in filelist:
         if (file.endswith(".txt")):
             fileVer = float(file[:-4])
-            if(fileVer > recentVer):
-                recentVer = fileVer
-                print(recentVer)
+            if(fileVer > recent_ver):
+                recent_ver = fileVer
+                print(recent_ver)
                 os.rename(PATH + file, PATH + file + ".bak")
                   
-    return recentVer
+    return recent_ver
 
 def updateVer(Ver):
     """Ändere die angezeigte Version in RSS und HTML
@@ -38,21 +39,24 @@ def updateVer(Ver):
     setRSSVer(Ver, "de")
     setRSSVer(Ver, "en")
 
+    current_ver = Ver
+
 def setHTMLVer(Ver, lang):
     """Andert die angezeigte Version in HTML
     """
     verTime = time.gmtime(os.path.getmtime(PATH + str(Ver) + ".txt.bak"))
     formatDatetime = "%i-%i-%i %i:%i" % (verTime.tm_year, verTime.tm_mon, verTime.tm_mday, verTime.tm_hour, verTime.tm_min)
     formatDate = "%i.%i.%i" %(verTime.tm_mday, verTime.tm_mon, verTime.tm_year)
+    formatVer = "{0:.3f}".format(Ver)[:-1]
     
     if (lang == "de"):
         srcHTML = HTMLFILE_DE
-        headertxt = "Aktuelle LOCKBASE Version: %0.2f" % (Ver,)
-        ptxt = "Die aktuelle LOCKBASE Version %0.2f steht ab jetzt für Sie zum Update bereit." % (Ver,)
+        headertxt = "Aktuelle LOCKBASE Version: {0}".format(formatVer)
+        ptxt = "Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit.".format(formatVer)
     elif (lang == "en"):
         srcHTML = HTMLFILE_EN
-        headertxt = "Latest LOCKBASE version:  %0.2f" % (Ver,)
-        ptxt = "The latest LOCKBASE version is %0.2f and can be downloaded " % (Ver,)
+        headertxt = "Latest LOCKBASE version:  {0}".format(formatVer)
+        ptxt = "The latest LOCKBASE version is {0} and can be downloaded ".format(formatVer)
 
         
     #file = open(os.path.join(os.path.dirname(srcHTML),"tmp" + os.path.basename(srcHTML)), "w")
@@ -87,15 +91,16 @@ def setRSSVer(Ver, lang):
     """
     ts = time.time()
     pubDateFormat = datetime.datetime.fromtimestamp(ts).strftime('%a, %d %b %Y %H:%M:%S')
+    formatVer = "{0:.3f}".format(Ver)[:-1]
 
     if (lang == "de"):
         srcRSS = RSSFILE_DE
-        titletxt = "Aktuelle LOCKBASE Version: %0.2f" % (Ver,)
-        descrtxt = "<p>Die aktuelle LOCKBASE Version %0.2f steht ab jetzt für Sie zum Update bereit.</p>" % (Ver,)
+        titletxt = "Aktuelle LOCKBASE Version: {0}".format(formatVer)
+        descrtxt = "<p>Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit.</p>".format(formatVer)
     elif (lang == "en"):
         srcRSS = RSSFILE_EN
-        titletxt = "Latest LOCKBASE Version: %0.2f" % (Ver,)
-        descrtxt = "<p>The latest LOCKBASE Version %0.2f can be downloaded.</p>" % (Ver,)
+        titletxt = "Latest LOCKBASE Version: {0}".format(formatVer)
+        descrtxt = "<p>The latest LOCKBASE Version {0} can be downloaded.</p>".format(formatVer)
     
 
     dom = xml.dom.minidom.parse(srcRSS)
@@ -121,6 +126,6 @@ def setRSSVer(Ver, lang):
     
 
 
-current_ver = getVer(PATH)
-#current_ver = 66.666
-updateVer(current_ver)
+getVer(PATH)
+if (recent_ver > current_ver):
+    updateVer(recent_ver)
