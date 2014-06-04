@@ -54,7 +54,7 @@ def setHTMLVer(Ver, lang):
         ptxt = "Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit.".format(formatVer)
     elif (lang == "en"):
         srcHTML = HTMLFILE_EN
-        headertxt = "Latest LOCKBASE version:  {0}".format(formatVer)
+        headertxt = "Latest LOCKBASE version: {0}".format(formatVer)
         ptxt = "The latest LOCKBASE version is {0} and can be downloaded ".format(formatVer)
 
         
