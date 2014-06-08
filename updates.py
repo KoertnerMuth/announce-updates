@@ -2,6 +2,7 @@ import os
 import xml.dom.minidom
 import time
 import datetime
+import locale
 
 
 recent_ver = 0
@@ -33,25 +34,26 @@ def getVer(path):
 def updateVer(Ver):
     """Ändere die angezeigte Version in RSS und HTML
     """
-    setHTMLVer(Ver, "de")
-    setHTMLVer(Ver, "en")
+    setHTMLVer(Ver, "de_DE.utf8")
+    setHTMLVer(Ver, "en_IN")
     setRSSVer(Ver, "de")
     setRSSVer(Ver, "en")
 
 def setHTMLVer(Ver, lang):
     """Andert die angezeigte Version in HTML
     """
+    locale.setlocale(locale.LC_ALL, lang)
     verTime = time.gmtime(os.path.getmtime(PATH + str(Ver) + ".txt.bak"))
-    #YYYY-MM-DDThh:mm:ssTZD
-    formatDatetime = time.strftime('%Y-%m-%d %H:%M:%S%z', verTime)
-    formatDate = "%i.%i.%i" %(verTime.tm_mday, verTime.tm_mon, verTime.tm_year)
     formatVer = "{0:.3f}".format(Ver)[:-1]
     
-    if (lang == "de"):
+    formatDatetime = time.strftime('%Y-%m-%d %H:%M:%S%z', verTime)
+    formatDate = time.strftime('%x', verTime)
+    
+    if (lang == "de_DE.utf8"):
         srcHTML = HTMLFILE_DE
         headertxt = "Aktuelle LOCKBASE Version: {0}".format(formatVer)
         ptxt = "Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit.".format(formatVer)
-    elif (lang == "en"):
+    elif (lang == "en_IN"):
         srcHTML = HTMLFILE_EN
         headertxt = "Latest LOCKBASE version:  {0}".format(formatVer)
         ptxt = "The latest LOCKBASE version is {0} and can be downloaded ".format(formatVer)
