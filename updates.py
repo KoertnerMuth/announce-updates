@@ -1,5 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 import os
 import xml.dom.minidom
 import time
@@ -44,7 +42,8 @@ def setHTMLVer(Ver, lang):
     """Andert die angezeigte Version in HTML
     """
     verTime = time.gmtime(os.path.getmtime(PATH + str(Ver) + ".txt.bak"))
-    formatDatetime = "%i-%i-%i %i:%i" % (verTime.tm_year, verTime.tm_mon, verTime.tm_mday, verTime.tm_hour, verTime.tm_min)
+    #YYYY-MM-DDThh:mm:ssTZD
+    formatDatetime = time.strftime('%Y-%m-%d %H:%M:%S%z', verTime)
     formatDate = "%i.%i.%i" %(verTime.tm_mday, verTime.tm_mon, verTime.tm_year)
     formatVer = "{0:.3f}".format(Ver)[:-1]
     
@@ -54,7 +53,7 @@ def setHTMLVer(Ver, lang):
         ptxt = "Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit.".format(formatVer)
     elif (lang == "en"):
         srcHTML = HTMLFILE_EN
-        headertxt = "Latest LOCKBASE version: {0}".format(formatVer)
+        headertxt = "Latest LOCKBASE version:  {0}".format(formatVer)
         ptxt = "The latest LOCKBASE version is {0} and can be downloaded ".format(formatVer)
 
         
@@ -113,17 +112,14 @@ def setRSSVer(Ver, lang):
     channel = root.childNodes[1]
 
     for node in channel.childNodes:
-        if (node.nodeName == "lastBDate"):
-            print("lala")
+        if (node.nodeName == "lastBuildDate"):
+            #TODO
+            pass
         elif (node.nodeName == "item"):
-            for chNode in node.childNodes:
-                if (chNode.nodeName == "title"):
-                    chNode.firstChild.replaceWholeText(titletxt)
-                elif (chNode.nodeName == "pubDate"):
-                    chNode.firstChild.replaceWholeText(pubDateFormat)
-                elif (chNode.nodeName == "description"):
-                    chNode.firstChild.replaceWholeText(descrtxt)
-                break;
+            node.getElementsByTagName("title")[0].firstChild.replaceWholeText(titletxt)
+            node.getElementsByTagName("pubDate")[0].firstChild.replaceWholeText(pubDateFormat)
+            node.getElementsByTagName("description")[0].firstChild.replaceWholeText(descrtxt)
+            break;
 
     file = open(srcRSS, "w")
     root.writexml(file)
@@ -132,7 +128,7 @@ def setRSSVer(Ver, lang):
 
 
 recent_ver = getVer(PATH)
-#recent_ver = 66.6666
+#recent_ver = 11.11
 if (recent_ver > 0):
     updateVer(recent_ver)
 else:
