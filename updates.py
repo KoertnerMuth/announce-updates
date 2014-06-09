@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 import os
 import xml.dom.minidom
 import time
@@ -55,7 +57,7 @@ def setHTMLVer(Ver, lang):
         ptxt = "Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit.".format(formatVer)
     elif (lang == "en_IN"):
         srcHTML = HTMLFILE_EN
-        headertxt = "Latest LOCKBASE version:  {0}".format(formatVer)
+        headertxt = "Latest LOCKBASE version: {0}".format(formatVer)
         ptxt = "The latest LOCKBASE version is {0} and can be downloaded ".format(formatVer)
 
         
@@ -118,11 +120,17 @@ def setRSSVer(Ver, lang):
             #TODO
             pass
         elif (node.nodeName == "item"):
-            node.getElementsByTagName("title")[0].firstChild.replaceWholeText(titletxt)
-            node.getElementsByTagName("pubDate")[0].firstChild.replaceWholeText(pubDateFormat)
-            node.getElementsByTagName("description")[0].firstChild.replaceWholeText(descrtxt)
-            break;
+            if(node.getElementsByTagName("title")[0].firstChild.nodeValue[:-6] == titletxt[:-6]):
+                versionNode = node
+                node.getElementsByTagName("title")[0].firstChild.replaceWholeText(titletxt)
+                node.getElementsByTagName("pubDate")[0].firstChild.replaceWholeText(pubDateFormat)
+                node.getElementsByTagName("description")[0].firstChild.replaceWholeText(descrtxt)
+                break;
 
+    firstItem = channel.getElementsByTagName("item")[0]
+    firstItem.parentNode.insertBefore(versionNode.cloneNode(True), firstItem)
+    firstItem.parentNode.removeChild(versionNode)
+    
     file = open(srcRSS, "w")
     root.writexml(file)
 
@@ -130,7 +138,7 @@ def setRSSVer(Ver, lang):
 
 
 recent_ver = getVer(PATH)
-#recent_ver = 11.11
+recent_ver = 11.11
 if (recent_ver > 0):
     updateVer(recent_ver)
 else:
