@@ -5,6 +5,7 @@ import xml.dom.minidom
 import time
 import datetime
 import locale
+import email.utils
 
 
 recent_ver = 0
@@ -97,7 +98,7 @@ def setRSSVer(Ver, lang):
     Element an oberste Stelle
     """
     ts = time.time()
-    pubDateFormat = datetime.datetime.fromtimestamp(ts).strftime('%a, %d %b %Y %H:%M:%S')
+    pubDateFormat = email.utils.formatdate(localtime=True)
     formatVer = "{0:.3f}".format(Ver)[:-1]
 
     if (lang == "de"):
@@ -117,8 +118,7 @@ def setRSSVer(Ver, lang):
 
     for node in channel.childNodes:
         if (node.nodeName == "lastBuildDate"):
-            #TODO
-            pass
+            node.firstChild.replaceWholeText(pubDateFormat)
         elif (node.nodeName == "item"):
             if(node.getElementsByTagName("title")[0].firstChild.nodeValue[:-6] == titletxt[:-6]):
                 versionNode = node
