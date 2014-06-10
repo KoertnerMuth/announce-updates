@@ -196,6 +196,6 @@ newFeatures = ver_feat[1]
 recent_ver = 11.11
 if (recent_ver > 0):
     updateVer(recent_ver)
-    #os.rename(PATH + filename, PATH + filename + ".bak")
+    os.rename(PATH + filename, PATH + filename + ".bak")
 else:
     print("No update")
