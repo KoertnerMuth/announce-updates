@@ -1,0 +1,18 @@
+05.04.14 fixed
+In Pfaffenhain Bravus 3000 the side pins of the third pin row appear as wafers of the first row, in case the first row does not have own wafers
+
+10.04.14 new
+LOCKBASE data path display added to 'About LOCKBASE' dialogue box
+
+14.04.14 new
+Consistency check option 'Cylinders with same number keyed alike'
+
+22.04.14 fixed
+Cylinder Type Database maintenance tool (LbwCTDB): The Item list shows items of the formerly selected product type at its end
+
+23.04.14 fixed
+In Gera 9000 cylinders may be calculated with F9 restrictions even if they are not F9 cylinders
+
+12.05.14 fixed
+When activating door or key holder list by clicking to an item, the first item may be focused instead of the item clicked to (Option 'Show connected only'=on)
+
