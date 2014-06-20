@@ -161,7 +161,7 @@ def setRSSVer(Ver, lang):
         #formatting german strings
         srcRSS = RSSFILE_DE
         titletxt = ger_htxt.format(formatVer)
-        descrtxt = "<p>"+ger_ptxt+"</p>".format(formatVer)
+        descrtxt = "<p>"+ger_ptxt.format(formatVer)+"</p>"
         ftxt = ger_ftxt
         support = "GSupport#{0}".format(formatVer)
     elif (lang == "en"):
