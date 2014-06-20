@@ -34,6 +34,9 @@ RSSFILE_EN = "en.rss"
 #URL
 supportURL = "http://www.koertner-muth.de/koertner-muth/Navi.cgi?Topic={0}"
 
+#Category
+category = "Updates";
+
 def getVer(path):
     """Liest alle Dateinamen in Support/RawBin/ , um die aktuellste
     Version zu finden.
@@ -47,11 +50,11 @@ def getVer(path):
             fileVer = float(filename[:-4])
             if(fileVer > recent_ver):
                 if(recent_ver > 0):
-                    os.rename(PATH + str(recent_ver) + ".txt", PATH + str(recent_ver) + ".txt.bak")
+                    os.rename(path + str(recent_ver) + ".txt", path + str(recent_ver) + ".txt.bak")
                 recent_ver = fileVer
                 print(recent_ver)
             #new-Features
-            file = open(PATH + filename)
+            file = open(path + filename)
             lines = file.readlines()
             for i in range(0, len(lines), 3):
                 if(lines[i][-4:] == "new\n"): #if 'new' feature
@@ -183,6 +186,8 @@ def setRSSVer(Ver, lang):
                 node.getElementsByTagName("title")[0].firstChild.replaceWholeText(titletxt)
                 node.getElementsByTagName("link")[0].firstChild.replaceWholeText(supportURL.format(support))
                 node.getElementsByTagName("pubDate")[0].firstChild.replaceWholeText(pubDateFormat)
+                node.getElementsByTagName("category")[0].firstChild.replaceWholeText(category)
+                node.getElementsByTagName("guid")[0].firstChild.replaceWholeText(supportURL.format(support))
                 descrElement = node.getElementsByTagName("description")[0]
                 descrElement.firstChild.replaceWholeText(descrtxt)
                 
