@@ -16,11 +16,13 @@ newFeatures = []
 ger_htxt = "Aktuelle LOCKBASE Version: {0}"
 ger_ptxt = "Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit."
 ger_ftxt = "Neue Features:"
+ger_ftxt_empty = "Keine neuen Features"
 
 #english-strings
 eng_htxt = "Latest LOCKBASE version: {0}"
 eng_ptxt = "The latest LOCKBASE version is {0} and can be downloaded "
 eng_ftxt = "New features:"
+eng_ftxt_empty = "No new features"
 
 #Path constants
 PATH = "Support/RawBin/"
@@ -88,13 +90,19 @@ def setHTMLVer(Ver, lang):
         srcHTML = HTMLFILE_DE
         htxt = ger_htxt.format(formatVer)
         ptxt = ger_ptxt.format(formatVer)
-        ftxt = ger_ftxt
+        if(not newFeatures):
+            ftxt = ger_ftxt_empty
+        else:
+            ftxt = ger_ftxt
     elif (lang == "en_IN"):
         #formatting english strings
         srcHTML = HTMLFILE_EN
         htxt = eng_htxt.format(formatVer)
         ptxt = eng_ptxt.format(formatVer)
-        ftxt = eng_ftxt
+        if(not newFeatures):
+            ftxt = eng_ftxt_empty
+        else:
+            ftxt = eng_ftxt
 
     #DOM manipulation
     dom_file = open(srcHTML, encoding='utf-8')
@@ -162,14 +170,20 @@ def setRSSVer(Ver, lang):
         srcRSS = RSSFILE_DE
         titletxt = ger_htxt.format(formatVer)
         descrtxt = "<p>"+ger_ptxt.format(formatVer)+"</p>"
-        ftxt = ger_ftxt
+        if(not newFeatures):
+            ftxt = ger_ftxt_empty
+        else:
+            ftxt = ger_ftxt
         support = "GSupport#{0}".format(formatVer)
     elif (lang == "en"):
         #formatting english strings
         srcRSS = RSSFILE_EN
         titletxt = eng_htxt.format(formatVer)
         descrtxt = "<p>"+eng_ptxt.format(formatVer)+"</p>"
-        ftxt = eng_ftxt
+        if(not newFeatures):
+            ftxt = eng_ftxt_empty
+        else:
+            ftxt = eng_ftxt
         support = "ESupport#{0}".format(formatVer)
     
     #DOM manipulation
@@ -194,7 +208,7 @@ def setRSSVer(Ver, lang):
                 descrElement.firstChild.replaceWholeText(descrtxt)
                 
                 #adding new feature element
-                newFElement = dom.createElement("newfeat") #element containing new feature lines
+                newFElement = dom.createElement("newfeat") #element containing new feature lines                 
                 newFElement.appendChild(dom.createTextNode(ftxt))
                 for line in newFeatures:
                     newFElement.appendChild(dom.createTextNode(" - " + line))
