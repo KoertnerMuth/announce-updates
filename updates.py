@@ -7,6 +7,21 @@ import datetime
 import locale
 import email.utils
 
+#Version and features
+recent_ver = 0
+newFeatures = []
+
+##Strings
+#german-strings
+ger_htxt = "Aktuelle LOCKBASE Version: {0}"
+ger_ptxt = "Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit."
+ger_ftxt = "Neue Features:"
+
+#english-strings
+eng_htxt = "Latest LOCKBASE version: {0}"
+eng_ptxt = "The latest LOCKBASE version is {0} and can be downloaded "
+eng_ftxt = "New features:"
+
 #Path constants
 PATH = "Support/RawBin/"
 HTMLFILE_DE = "Contents/GLBW.html"
@@ -16,9 +31,8 @@ tmpHTMLFILE_EN = "Contents/tmpELBW.html"
 RSSFILE_DE = "de.rss"
 RSSFILE_EN = "en.rss"
 
-#Version and features
-recent_ver = 0
-newFeatures = []
+#URL
+supportURL = "http://www.koertner-muth.de/koertner-muth/Navi.cgi?Topic={0}"
 
 def getVer(path):
     """Liest alle Dateinamen in Support/RawBin/ , um die aktuellste
@@ -32,13 +46,15 @@ def getVer(path):
             #getting latest version number
             fileVer = float(filename[:-4])
             if(fileVer > recent_ver):
+                if(recent_ver > 0):
+                    os.rename(PATH + str(recent_ver) + ".txt", PATH + str(recent_ver) + ".txt.bak")
                 recent_ver = fileVer
                 print(recent_ver)
             #new-Features
             file = open(PATH + filename)
             lines = file.readlines()
             for i in range(0, len(lines), 3):
-                if(lines[i][-4:] == "new\n"):#if 'new' feature
+                if(lines[i][-4:] == "new\n"): #if 'new' feature
                     newF.append(lines[i+1])#stored in a list, each element is a line
               
     return [recent_ver, newF] #returned in a pair
@@ -65,15 +81,15 @@ def setHTMLVer(Ver, lang):
     if (lang == "de_DE.utf8"):
         #formatting german strings
         srcHTML = HTMLFILE_DE
-        headertxt = "Aktuelle LOCKBASE Version: {0}".format(formatVer)
-        ptxt = "Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit.".format(formatVer)
-        ftxt = "Neue Features:"
+        htxt = ger_htxt.format(formatVer)
+        ptxt = ger_ptxt.format(formatVer)
+        ftxt = ger_ftxt
     elif (lang == "en_IN"):
         #formatting english strings
         srcHTML = HTMLFILE_EN
-        headertxt = "Latest LOCKBASE version: {0}".format(formatVer)
-        ptxt = "The latest LOCKBASE version is {0} and can be downloaded ".format(formatVer)
-        ftxt = "New features:"
+        htxt = eng_htxt.format(formatVer)
+        ptxt = eng_ptxt.format(formatVer)
+        ftxt = eng_ftxt
 
     #DOM manipulation
     dom_file = open(srcHTML, encoding='utf-8')
@@ -96,10 +112,11 @@ def setHTMLVer(Ver, lang):
             timedate.firstChild.replaceWholeText(formatDate)
         elif node.nodeName == "header":
             header = article0.getElementsByTagName("h1")[0]
-            header.firstChild.replaceWholeText(headertxt)
+            header.firstChild.replaceWholeText(htxt)
         elif node.nodeName == "p":
             paragraph = article0.getElementsByTagName("p")[0]
             paragraph.firstChild.replaceWholeText(ptxt)
+            
             #writing new features to a new paragraph
             brElement = dom.createElement("br") #linebreak element
             newFElement = dom.createElement("p") #paragraph containing new feature lines
@@ -108,9 +125,10 @@ def setHTMLVer(Ver, lang):
             for line in newFeatures:
                 newFElement.appendChild(brElement.cloneNode(False))
                 newFElement.appendChild(dom.createTextNode(" - " + line))
-            if (paragraph.lastChild.hasAttribute("id")):
-                if (paragraph.lastChild.getAttribute("id") == "newFeatures"):
-                    paragraph.replaceChild(newFElement, paragraph.lastChild)
+            if (paragraph.lastChild.nodeName != "#text"): #check if old paragraph exists
+                if (paragraph.lastChild.hasAttribute("id")): 
+                    if (paragraph.lastChild.getAttribute("id") == "newFeatures"): #then old paragraph exists and needs to be replaced
+                        paragraph.replaceChild(newFElement, paragraph.lastChild)
             else:
                 paragraph.appendChild(newFElement)
                     
@@ -137,15 +155,17 @@ def setRSSVer(Ver, lang):
     if (lang == "de"):
         #formatting german strings
         srcRSS = RSSFILE_DE
-        titletxt = "Aktuelle LOCKBASE Version: {0}".format(formatVer)
-        descrtxt = "<p>Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit.</p>".format(formatVer)
-        ftxt = "Neue Features:"
+        titletxt = ger_htxt.format(formatVer)
+        descrtxt = "<p>"+ger_ptxt+"</p>".format(formatVer)
+        ftxt = ger_ftxt
+        support = "GSupport#{0}".format(formatVer)
     elif (lang == "en"):
         #formatting english strings
         srcRSS = RSSFILE_EN
-        titletxt = "Latest LOCKBASE Version: {0}".format(formatVer)
-        descrtxt = "<p>The latest LOCKBASE Version {0} can be downloaded.</p>".format(formatVer)
-        ftxt = "New features:"
+        titletxt = eng_htxt.format(formatVer)
+        descrtxt = "<p>"+eng_ptxt.format(formatVer)+"</p>"
+        ftxt = eng_ftxt
+        support = "ESupport#{0}".format(formatVer)
     
     #DOM manipulation
     dom = xml.dom.minidom.parse(srcRSS)
@@ -161,6 +181,7 @@ def setRSSVer(Ver, lang):
             if(node.getElementsByTagName("title")[0].firstChild.nodeValue[:-6] == titletxt[:-6]):
                 versionNode = node
                 node.getElementsByTagName("title")[0].firstChild.replaceWholeText(titletxt)
+                node.getElementsByTagName("link")[0].firstChild.replaceWholeText(supportURL.format(support))
                 node.getElementsByTagName("pubDate")[0].firstChild.replaceWholeText(pubDateFormat)
                 descrElement = node.getElementsByTagName("description")[0]
                 descrElement.firstChild.replaceWholeText(descrtxt)
@@ -170,12 +191,9 @@ def setRSSVer(Ver, lang):
                 newFElement.appendChild(dom.createTextNode(ftxt))
                 for line in newFeatures:
                     newFElement.appendChild(dom.createTextNode(" - " + line))
-                print(descrElement.lastChild.nodeName)
-                if (descrElement.lastChild.nodeName == "newfeat"): #old new feature element found
-                    print("replace")
-                    descrElement.replaceChild(newFElement, descrElement.lastChild)
+                if (descrElement.lastChild.nodeName == "newfeat"): #old new-feature element found
+                    descrElement.replaceChild(newFElement, descrElement.lastChild) #reolacing old new-feature element
                 else:
-                    print("append")
                     descrElement.appendChild(newFElement)
                 break;
 
@@ -193,9 +211,9 @@ def setRSSVer(Ver, lang):
 ver_feat = getVer(PATH)
 recent_ver = ver_feat[0]
 newFeatures = ver_feat[1]
-recent_ver = 11.11
+#recent_ver = 11.11
 if (recent_ver > 0):
     updateVer(recent_ver)
-    os.rename(PATH + filename, PATH + filename + ".bak")
+    os.rename(PATH + str(recent_ver) + ".txt", PATH + str(recent_ver) + ".txt.bak")
 else:
     print("No update")
