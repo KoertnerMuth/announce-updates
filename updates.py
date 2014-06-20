@@ -59,6 +59,8 @@ def getVer(path):
             for i in range(0, len(lines), 3):
                 if(lines[i][-4:] == "new\n"): #if 'new' feature
                     newF.append(lines[i+1])#stored in a list, each element is a line
+            if(fileVer < recent_ver):
+                os.rename(path + str(fileVer) + ".txt", path + str(fileVer) + ".txt.bak")    
               
     return [recent_ver, newF] #returned in a pair
 
