@@ -14,15 +14,15 @@ newFeatures = []
 ##Strings
 #german-strings
 ger_htxt = "Aktuelle LOCKBASE Version: {0}"
-ger_ptxt = "Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit."
+ger_ptxt = "Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit. <span class=\"more\"><a href=\"Navi.cgi?Topic=GSupport#{0}\">mehr</a></span>"
 ger_ftxt = "Neue Features:"
-ger_ftxt_empty = "Keine neuen Features"
+ger_ftxt_empty = ""
 
 #english-strings
 eng_htxt = "Latest LOCKBASE version: {0}"
-eng_ptxt = "The latest LOCKBASE version is {0} and can be downloaded "
+eng_ptxt = "The latest LOCKBASE version is {0} and can be downloaded <a href=\"Navi.cgi?Topic=ESupport#{0}\">here</a>"
 eng_ftxt = "New features:"
-eng_ftxt_empty = "No new features"
+eng_ftxt_empty = ""
 
 #Path constants
 PATH = "Support/RawBin/"
@@ -110,6 +110,7 @@ def setHTMLVer(Ver, lang):
     
     root = dom.documentElement #HTML root node
     articles = root.getElementsByTagName("article")
+
     #finding version-articlenode
     for article in articles:
         if (article.hasAttribute("id")):
