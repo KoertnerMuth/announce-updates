@@ -10,7 +10,7 @@ B2B letter template disappears every time a file was received from the resp. sen
 30.03.14 fixed
 When opening a newly created file the second time, the cylinder list in the Data List show the key copies instead of the cylinders (assigning a format template repairs it)
 
-31.03.14 new
+31.03.14 fixed
 If a key deactivated for calculation in the Calculator becomes the master key, it cannot be reactivated
 
 31.03.14 modified
