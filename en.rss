@@ -5,12 +5,22 @@
 	<atom:link href="http://koertner-muth.de/de.rss" rel="self" type="application/rss+xml" />
 	<link>http://koertner-muth.de</link>
 	<description>Aktuelles von LOCKBASE und der Körtner &amp; Muth GmbH</description>
-	<lastBuildDate>Fr, 29 Nov 2013 13:12:00 +0100</lastBuildDate>
+	<lastBuildDate>Thu, 19 Jun 2014 19:05:00 +0100</lastBuildDate>
 
 	<generator>http://koertner-muth.de</generator>
 	<language>de</language>
 	<item>
-		<title>Latest LOCKBASE version: 14.02</title>
+		<title>23.-26. September: SECURITY in Essen</title>
+
+		<link></link>
+		<pubDate>Thu, 19 Jun 2014 19:05:00 +0100</pubDate>
+		<category><![CDATA[Messe]]></category>
+
+		<guid isPermaLink="false">http://www.koertner-muth.de</guid>
+		<description><![CDATA[<p>If you visit the <a href="http://www.security-essen.de">SECURITY fair in Essen</a>, Germany, we would love to meet you there. We exhibit from 23 - 26 September 2014. Exhibition stand in hall 12, stand no. 12 - 102 (close to hall 11).</p>]]></description>
+	</item>		
+	<item>
+		<title>Aktuelle LOCKBASE Version: 14.02</title>
 
 		<link>http://www.koertner-muth.de/koertner-muth/Navi.cgi?Topic=GSupport</link>
 		<pubDate>Mo, 17 Feb 2014 13:45:00 +0100</pubDate>
