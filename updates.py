@@ -16,13 +16,11 @@ newFeatures = []
 ger_htxt = "Aktuelle LOCKBASE Version: {0}"
 ger_ptxt = "Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit. <span class=\"more\"><a href=\"Navi.cgi?Topic=GSupport#{0}\">mehr</a></span>"
 ger_ftxt = "Neue Features:"
-ger_ftxt_empty = ""
 
 #english-strings
 eng_htxt = "Latest LOCKBASE version: {0}"
 eng_ptxt = "The latest LOCKBASE version is {0} and can be downloaded <a href=\"Navi.cgi?Topic=ESupport#{0}\">here</a>"
 eng_ftxt = "New features:"
-eng_ftxt_empty = ""
 
 #Path constants
 PATH = "Support/RawBin/"
@@ -83,26 +81,20 @@ def setHTMLVer(Ver, lang):
     
     formatVer = "{0:.3f}".format(Ver)[:-1] #for truncating to having 2 decimal points
     formatDatetime = time.strftime('%Y-%m-%d %H:%M:%S%z', verTime)
-    formatDate = time.strftime('%x', verTime)
+    formatDate = time.strftime('%d.%m.%Y', verTime)
 
     if (lang == "de_DE.utf8"):
         #formatting german strings
         srcHTML = HTMLFILE_DE
         htxt = ger_htxt.format(formatVer)
         ptxt = ger_ptxt.format(formatVer)
-        if(not newFeatures):
-            ftxt = ger_ftxt_empty
-        else:
-            ftxt = ger_ftxt
+        ftxt = ger_ftxt
     elif (lang == "en_IN"):
         #formatting english strings
         srcHTML = HTMLFILE_EN
         htxt = eng_htxt.format(formatVer)
         ptxt = eng_ptxt.format(formatVer)
-        if(not newFeatures):
-            ftxt = eng_ftxt_empty
-        else:
-            ftxt = eng_ftxt
+        ftxt = eng_ftxt
 
     #DOM manipulation
     dom_file = open(srcHTML, encoding='utf-8')
@@ -132,19 +124,26 @@ def setHTMLVer(Ver, lang):
             paragraph.firstChild.replaceWholeText(ptxt)
             
             #writing new features to a new paragraph
-            brElement = dom.createElement("br") #linebreak element
-            newFElement = dom.createElement("p") #paragraph containing new feature lines
-            newFElement.setAttribute("id", "newFeatures")
-            newFElement.appendChild(dom.createTextNode(ftxt))
-            for line in newFeatures:
-                newFElement.appendChild(brElement.cloneNode(False))
-                newFElement.appendChild(dom.createTextNode(" - " + line))
-            if (paragraph.lastChild.nodeName != "#text"): #check if old paragraph exists
-                if (paragraph.lastChild.hasAttribute("id")): 
-                    if (paragraph.lastChild.getAttribute("id") == "newFeatures"): #then old paragraph exists and needs to be replaced
-                        paragraph.replaceChild(newFElement, paragraph.lastChild)
+            if(newFeatures):
+                newFElement = dom.createElement("ul") #list containing new feature lines
+                li = dom.createElement("li") #list bullet template
+                newFElement.setAttribute("class", "newFeatures")
+                newFElement.appendChild(dom.createTextNode(ftxt))
+                for line in newFeatures:
+                    libullet = li.cloneNode(False) 
+                    newFElement.appendChild(libullet)
+                    libullet.appendChild(dom.createTextNode(line)) #fill bullet with text
+                if (paragraph.lastChild.nodeName == "ul" and
+                    paragraph.lastChild.hasAttribute("class") and
+                    paragraph.lastChild.getAttribute("class") == "newFeatures"): #check if old paragraph exists and needs to be replaced
+                            paragraph.replaceChild(newFElement, paragraph.lastChild)
+                else:
+                    paragraph.appendChild(newFElement)
             else:
-                paragraph.appendChild(newFElement)
+                if (paragraph.lastChild.nodeName == "ul" and
+                    paragraph.lastChild.hasAttribute("class") and
+                    paragraph.lastChild.getAttribute("class") == "newFeatures"): #check if old paragraph exists and needs to be removed
+                            paragraph.removeChild(paragraph.lastChild)
                     
     #moving edited article at the top
     firstArticle = articles[0]
@@ -171,20 +170,14 @@ def setRSSVer(Ver, lang):
         srcRSS = RSSFILE_DE
         titletxt = ger_htxt.format(formatVer)
         descrtxt = "<p>"+ger_ptxt.format(formatVer)+"</p>"
-        if(not newFeatures):
-            ftxt = ger_ftxt_empty
-        else:
-            ftxt = ger_ftxt
+        ftxt = ger_ftxt
         support = "GSupport#{0}".format(formatVer)
     elif (lang == "en"):
         #formatting english strings
         srcRSS = RSSFILE_EN
         titletxt = eng_htxt.format(formatVer)
         descrtxt = "<p>"+eng_ptxt.format(formatVer)+"</p>"
-        if(not newFeatures):
-            ftxt = eng_ftxt_empty
-        else:
-            ftxt = eng_ftxt
+        ftxt = eng_ftxt
         support = "ESupport#{0}".format(formatVer)
     
     #DOM manipulation
@@ -209,14 +202,28 @@ def setRSSVer(Ver, lang):
                 descrElement.firstChild.replaceWholeText(descrtxt)
                 
                 #adding new feature element
-                newFElement = dom.createElement("newfeat") #element containing new feature lines                 
-                newFElement.appendChild(dom.createTextNode(ftxt))
-                for line in newFeatures:
-                    newFElement.appendChild(dom.createTextNode(" - " + line))
-                if (descrElement.lastChild.nodeName == "newfeat"): #old new-feature element found
-                    descrElement.replaceChild(newFElement, descrElement.lastChild) #reolacing old new-feature element
+                if(newFeatures):
+                    newFElement = dom.createElement("ul") #list containing new feature lines
+                    li = dom.createElement("li") #list bullet template
+                    newFElement.setAttribute("class", "newFeatures")
+                    newFElement.appendChild(dom.createTextNode(ftxt))#text-node with new-feat text
+                    for line in newFeatures:
+                        libullet = li.cloneNode(False) 
+                        newFElement.appendChild(libullet)
+                        libullet.appendChild(dom.createTextNode(line)) #fill bullet with text
+
+                    if (descrElement.lastChild.nodeName == "ul" and
+                        descrElement.lastChild.hasAttribute("class") and
+                        descrElement.lastChild.getAttribute("class") == "newFeatures"): #old new-feature element found
+                        descrElement.replaceChild(newFElement, descrElement.lastChild) #replacing old new-feature element
+                    else:
+                        descrElement.appendChild(newFElement)
                 else:
-                    descrElement.appendChild(newFElement)
+                    if (descrElement.lastChild.nodeName == "ul" and
+                        descrElement.lastChild.hasAttribute("class") and
+                        descrElement.lastChild.getAttribute("class") == "newFeatures"): #old new-feature element found
+                        descrElement.removeChild(descrElement.lastChild) #deleting old new-feature element
+                    
                 break;
 
     #moving edited version-item at the top
