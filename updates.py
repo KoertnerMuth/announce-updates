@@ -14,12 +14,12 @@ newFeatures = []
 ##Strings
 #german-strings
 ger_htxt = "Aktuelle LOCKBASE Version: {0}"
-ger_ptxt = "Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit. <span class=\"more\"><a href=\"Navi.cgi?Topic=GSupport#{0}\">mehr</a></span>"
+ger_ptxt = "Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit."# <span class=\"more\"><a href=\"Navi.cgi?Topic=GSupport#{0}\">mehr</a></span>"
 ger_ftxt = "Neue Features:"
 
 #english-strings
 eng_htxt = "Latest LOCKBASE version: {0}"
-eng_ptxt = "The latest LOCKBASE version is {0} and can be downloaded <a href=\"Navi.cgi?Topic=ESupport#{0}\">here</a>"
+eng_ptxt = "The latest LOCKBASE version is {0} and can be downloaded"# <a href=\"Navi.cgi?Topic=ESupport#{0}\">here</a>"
 eng_ftxt = "New features:"
 
 #Path constants
