@@ -179,6 +179,13 @@ def setRSSVer(Ver, lang):
         descrtxt = "<p>"+eng_ptxt.format(formatVer)+"</p>"
         ftxt = eng_ftxt
         support = "ESupport#{0}".format(formatVer)
+
+    #adding new-features list to description text
+    if (newFeatures):
+        descrtxt += "<ul class = \"newFeatures\">" + ftxt
+        for line in newFeatures:
+            descrtxt += "<li>" + line + "</li>"
+        descrtxt += "</ul>"
     
     #DOM manipulation
     dom = xml.dom.minidom.parse(srcRSS)
@@ -200,30 +207,7 @@ def setRSSVer(Ver, lang):
                 node.getElementsByTagName("guid")[0].firstChild.replaceWholeText(supportURL.format(support))
                 descrElement = node.getElementsByTagName("description")[0]
                 descrElement.firstChild.replaceWholeText(descrtxt)
-                
-                #adding new feature element
-                if(newFeatures):
-                    newFElement = dom.createElement("ul") #list containing new feature lines
-                    li = dom.createElement("li") #list bullet template
-                    newFElement.setAttribute("class", "newFeatures")
-                    newFElement.appendChild(dom.createTextNode(ftxt))#text-node with new-feat text
-                    for line in newFeatures:
-                        libullet = li.cloneNode(False) 
-                        newFElement.appendChild(libullet)
-                        libullet.appendChild(dom.createTextNode(line)) #fill bullet with text
 
-                    if (descrElement.lastChild.nodeName == "ul" and
-                        descrElement.lastChild.hasAttribute("class") and
-                        descrElement.lastChild.getAttribute("class") == "newFeatures"): #old new-feature element found
-                        descrElement.replaceChild(newFElement, descrElement.lastChild) #replacing old new-feature element
-                    else:
-                        descrElement.appendChild(newFElement)
-                else:
-                    if (descrElement.lastChild.nodeName == "ul" and
-                        descrElement.lastChild.hasAttribute("class") and
-                        descrElement.lastChild.getAttribute("class") == "newFeatures"): #old new-feature element found
-                        descrElement.removeChild(descrElement.lastChild) #deleting old new-feature element
-                    
                 break;
 
     #moving edited version-item at the top
