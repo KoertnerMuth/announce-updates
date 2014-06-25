@@ -19,15 +19,15 @@ ger_ftxt = "Neue Features:"
 
 #english-strings
 eng_htxt = "Latest LOCKBASE version: {0}"
-eng_ptxt = "The latest LOCKBASE version is {0} and can be downloaded"# <a href=\"Navi.cgi?Topic=ESupport#{0}\">here</a>"
+eng_ptxt = "The latest LOCKBASE version is {0} and can be downloaded "# <a href=\"Navi.cgi?Topic=ESupport#{0}\">here</a>"
 eng_ftxt = "New features:"
 
 #Path constants
-PATH = "Support/RawBin/"
-HTMLFILE_DE = "Contents/GLBW.html"
-HTMLFILE_EN = "Contents/ELBW.html"
-tmpHTMLFILE_DE = "Contents/tmpGLBW.html"
-tmpHTMLFILE_EN = "Contents/tmpELBW.html"
+PATH = "koertner-muth/Support/RawBin/"
+HTMLFILE_DE = "koertner-muth/Contents/GLBW.html"
+HTMLFILE_EN = "koertner-muth/Contents/ELBW.html"
+tmpHTMLFILE_DE = "koertner-muth/Contents/tmpGLBW.html"
+tmpHTMLFILE_EN = "koertner-muth/Contents/tmpELBW.html"
 RSSFILE_DE = "de.rss"
 RSSFILE_EN = "en.rss"
 
