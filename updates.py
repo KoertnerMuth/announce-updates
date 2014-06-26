@@ -16,11 +16,13 @@ newFeatures = []
 ger_htxt = "Aktuelle LOCKBASE Version: {0}"
 ger_ptxt = "Die aktuelle LOCKBASE Version {0} steht ab jetzt für Sie zum Update bereit."# <span class=\"more\"><a href=\"Navi.cgi?Topic=GSupport#{0}\">mehr</a></span>"
 ger_ftxt = "Neue Features:"
+ger_stxt = "mehr"
 
 #english-strings
 eng_htxt = "Latest LOCKBASE version: {0}"
-eng_ptxt = "The latest LOCKBASE version is {0} and can be downloaded "# <a href=\"Navi.cgi?Topic=ESupport#{0}\">here</a>"
+eng_ptxt = "The latest LOCKBASE version is {0} and can be downloaded "#<a href=\"Navi.cgi?Topic=ESupport#{0}\">here</a>"
 eng_ftxt = "New features:"
+eng_stxt = "here"
 
 #Path constants
 PATH = "koertner-muth/Support/RawBin/"
@@ -33,6 +35,8 @@ RSSFILE_EN = "en.rss"
 
 #URL
 supportURL = "http://www.koertner-muth.de/koertner-muth/Navi.cgi?Topic={0}"
+supHRefHTML = "@NAVI="
+supHRefRSS = "<a href=\"Navi.cgi?Topic={0}\">{1}</a>"
 
 #Category
 category = "Updates";
@@ -89,12 +93,16 @@ def setHTMLVer(Ver, lang):
         htxt = ger_htxt.format(formatVer)
         ptxt = ger_ptxt.format(formatVer)
         ftxt = ger_ftxt
+        stxt = ger_stxt
+        support = "GSupport#{0}".format(formatVer)
     elif (lang == "en_IN"):
         #formatting english strings
         srcHTML = HTMLFILE_EN
         htxt = eng_htxt.format(formatVer)
         ptxt = eng_ptxt.format(formatVer)
         ftxt = eng_ftxt
+        stxt = eng_stxt
+        support = "ESupport#{0}".format(formatVer)
 
     #DOM manipulation
     dom_file = open(srcHTML, encoding='utf-8')
@@ -122,6 +130,25 @@ def setHTMLVer(Ver, lang):
         elif node.nodeName == "p":
             paragraph = article0.getElementsByTagName("p")[0]
             paragraph.firstChild.replaceWholeText(ptxt)
+            #Support Link
+            supEl = dom.createElement("span")
+            supEl.setAttribute("class", "more")
+            linkEl = dom.createElement("a")
+            linkEl.setAttribute("href", supHRefHTML + support)
+            linkEl.appendChild(dom.createTextNode(stxt))
+            supEl.appendChild(linkEl)
+            for child in paragraph.childNodes:
+                if (child.nodeName == "span" and
+                    child.hasAttribute("class") and
+                    child.getAttribute("class") == "more"):
+                    oldSupEl = child
+                    break;
+
+            if (oldSupEl):
+                paragraph.replaceChild(supEl, oldSupEl)
+            else:
+                paragraph.insertBefore(supEl, paragraph.firstChild.nextSibling)
+                    
             
             #writing new features to a new paragraph
             if(newFeatures):
@@ -169,16 +196,21 @@ def setRSSVer(Ver, lang):
         #formatting german strings
         srcRSS = RSSFILE_DE
         titletxt = ger_htxt.format(formatVer)
-        descrtxt = "<p>"+ger_ptxt.format(formatVer)+"</p>"
+        descrtxt = "<p>"+ger_ptxt.format(formatVer)
         ftxt = ger_ftxt
         support = "GSupport#{0}".format(formatVer)
+        stxt = ger_stxt
     elif (lang == "en"):
         #formatting english strings
         srcRSS = RSSFILE_EN
         titletxt = eng_htxt.format(formatVer)
-        descrtxt = "<p>"+eng_ptxt.format(formatVer)+"</p>"
+        descrtxt = "<p>"+eng_ptxt.format(formatVer)
         ftxt = eng_ftxt
         support = "ESupport#{0}".format(formatVer)
+        stxt = eng_stxt
+
+    #adding support links
+    descrtxt += supHRefRSS.format(support,stxt) +"</p>"
 
     #adding new-features list to description text
     if (newFeatures):
