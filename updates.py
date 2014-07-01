@@ -214,7 +214,7 @@ def setRSSVer(Ver, lang):
 
     #adding new-features list to description text
     if (newFeatures):
-        descrtxt += "<ul class = \"newFeatures\">" + ftxt
+        descrtxt += "<ul class=\"newFeatures\">" + ftxt
         for line in newFeatures:
             descrtxt += "<li>" + line + "</li>"
         descrtxt += "</ul>"
