@@ -51,8 +51,8 @@ def getVer(path):
     for filename in filelist:
         if (filename.endswith(".txt")):
             #getting latest version number
-            fileVer = float(filename[:-4])
-            if(fileVer > recent_ver):
+            fileVer = "{0:.5f}".format(float(filename[:-4]))
+            if(float(fileVer) > recent_ver):
                 if(recent_ver > 0):
                     os.rename(path + str(recent_ver) + ".txt", path + str(recent_ver) + ".txt.bak")
                 recent_ver = fileVer
@@ -63,8 +63,8 @@ def getVer(path):
             for i in range(0, len(lines), 3):
                 if(lines[i][-4:] == "new\n"): #if 'new' feature
                     newF.append(lines[i+1])#stored in a list, each element is a line
-            if(fileVer < recent_ver):
-                os.rename(path + str(fileVer) + ".txt", path + str(fileVer) + ".txt.bak")    
+            if(float(fileVer) < float(recent_ver)):
+                os.rename(path + fileVer + ".txt", path + fileVer + ".txt.bak")    
               
     return [recent_ver, newF] #returned in a pair
 
@@ -83,7 +83,7 @@ def setHTMLVer(Ver, lang):
     locale.setlocale(locale.LC_ALL, lang) #for dateformatting
     verTime = time.gmtime(os.path.getmtime(PATH + str(Ver) + ".txt")) #time of latest version .txt
     
-    formatVer = "{0:.3f}".format(Ver)[:-1] #for truncating to having 2 decimal points
+    formatVer = "{0:.2f}".format(float(Ver)) #for truncating to having 2 decimal points
     formatDatetime = time.strftime('%Y-%m-%d %H:%M:%S%z', verTime)
     formatDate = time.strftime('%d.%m.%Y', verTime)
 
@@ -190,7 +190,7 @@ def setRSSVer(Ver, lang):
     verTime = time.gmtime(os.path.getmtime(PATH + str(Ver) + ".txt"))
     pubDateFormat = time.strftime("%a, %d %b %Y %H:%M:%S %z", verTime)
     buildDateFormat = email.utils.formatdate(localtime=True)
-    formatVer = "{0:.3f}".format(Ver)[:-1]
+    formatVer = "{0:.3f}".format(float(Ver))[:-1]
 
     if (lang == "de"):
         #formatting german strings
@@ -257,7 +257,7 @@ ver_feat = getVer(PATH)
 recent_ver = ver_feat[0]
 newFeatures = ver_feat[1]
 #recent_ver = 11.11
-if (recent_ver > 0):
+if (float(recent_ver) > 0):
     updateVer(recent_ver)
     os.rename(PATH + str(recent_ver) + ".txt", PATH + str(recent_ver) + ".txt.bak")
 else:
