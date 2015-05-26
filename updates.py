@@ -46,27 +46,27 @@ def getVer(path):
     Version zu finden.
     """
     newF = []
-    recent_ver = 0
+    recentVersion = 0
     filelist = os.listdir(path)
     for filename in filelist:
-        if (filename.endswith(".txt")):
+        if filename.endswith(".txt"):
             # getting latest version number
             fileVer = '{0:.5f}'.format(float(filename[:-4]))
-            if (float(fileVer) > recent_ver):
-                if (recent_ver > 0):
-                    os.rename(path + str(recent_ver) + ".txt", path + str(recent_ver) + ".txt.bak")
-                recent_ver = fileVer
-                print(recent_ver)
+            if float(fileVer) > recentVersion:
+                if recentVersion > 0:
+                    os.rename(path + str(recentVersion) + ".txt", path + str(recentVersion) + ".txt.bak")
+                recentVersion = fileVer
+                print(recentVersion)
             # new-Features
             file = open(path + filename)
             lines = file.readlines()
             for i in range(0, len(lines), 3):
-                if (lines[i][-4:] == "new\n"):  # if 'new' feature
+                if lines[i][-4:] == "new\n":  # if 'new' feature
                     newF.append(lines[i + 1])  # stored in a list, each element is a line
-            if (fileVer < recent_ver):
+            if fileVer < recentVersion:
                 os.rename(path + str(fileVer) + ".txt", path + str(fileVer) + ".txt.bak")
 
-    return [recent_ver, newF]  # returned in a pair
+    return [recentVersion, newF]  # returned in a pair
 
 
 def updateVer(Ver):
@@ -89,7 +89,7 @@ def setHTMLVer(Ver, lang):
     formatDatetime = time.strftime('%Y-%m-%d %H:%M:%S%z', verTime)
     formatDate = time.strftime('%d.%m.%Y', verTime)
 
-    if (lang == "de_DE.utf8"):
+    if lang == "de_DE.utf8":
         # formatting german strings
         srcHTML = HTMLFILE_DE
         htxt = ger_htxt.format(formatVer)
@@ -115,8 +115,8 @@ def setHTMLVer(Ver, lang):
 
     # finding version-articlenode
     for article in articles:
-        if (article.hasAttribute("id")):
-            if (article.getAttribute("id") == "version"):
+        if article.hasAttribute("id"):
+            if article.getAttribute("id") == "version":
                 article0 = article  # found version-article
             break
 
@@ -140,17 +140,17 @@ def setHTMLVer(Ver, lang):
             linkEl.appendChild(dom.createTextNode(stxt))
             supEl.appendChild(linkEl)
             for child in paragraph.childNodes:
-                if (child.nodeName == "span" and child.hasAttribute("class") and child.getAttribute("class") == "more"):
+                if child.nodeName == "span" and child.hasAttribute("class") and child.getAttribute("class") == "more":
                     oldSupEl = child
                     break
 
-            if (oldSupEl):
+            if oldSupEl:
                 paragraph.replaceChild(supEl, oldSupEl)
             else:
                 paragraph.insertBefore(supEl, paragraph.firstChild.nextSibling)
 
             # writing new features to a new paragraph
-            if (newFeatures):
+            if newFeatures:
                 newFElement = dom.createElement("ul")  # list containing new feature lines
                 li = dom.createElement("li")  # list bullet template
                 newFElement.setAttribute("class", "newFeatures")
@@ -193,7 +193,7 @@ def setRSSVer(Ver, lang):
     buildDateFormat = email.utils.formatdate(localtime=True)
     formatVer = "{0:.3f}".format(float(Ver))[:-1]
 
-    if (lang == "de"):
+    if lang == "de":
         # formatting german strings
         srcRSS = RSSFILE_DE
         titletxt = ger_htxt.format(formatVer)
@@ -201,7 +201,7 @@ def setRSSVer(Ver, lang):
         ftxt = ger_ftxt
         support = "GSupport#{0}".format(formatVer)
         stxt = ger_stxt
-    elif (lang == "en"):
+    elif lang == "en":
         # formatting english strings
         srcRSS = RSSFILE_EN
         titletxt = eng_htxt.format(formatVer)
@@ -214,7 +214,7 @@ def setRSSVer(Ver, lang):
     descrtxt += supHRefRSS.format(support, stxt) + "</p>"
 
     # adding new-features list to description text
-    if (newFeatures):
+    if newFeatures:
         descrtxt += "<ul class=\"newFeatures\">" + ftxt
         for line in newFeatures:
             descrtxt += "<li>" + line + "</li>"
@@ -227,11 +227,11 @@ def setRSSVer(Ver, lang):
     channel = root.childNodes[1]
 
     for node in channel.childNodes:
-        if (node.nodeName == "lastBuildDate"):
+        if node.nodeName == "lastBuildDate":
             node.firstChild.replaceWholeText(buildDateFormat)
-        elif (node.nodeName == "item"):
+        elif node.nodeName == "item":
             # checking if item is version-item
-            if (node.getElementsByTagName("title")[0].firstChild.nodeValue[:-6] == titletxt[:-6]):
+            if node.getElementsByTagName("title")[0].firstChild.nodeValue[:-6] == titletxt[:-6]:
                 versionNode = node
                 node.getElementsByTagName("title")[0].firstChild.replaceWholeText(titletxt)
                 node.getElementsByTagName("link")[0].firstChild.replaceWholeText(supportURL.format(support))
@@ -257,7 +257,7 @@ ver_feat = getVer(PATH)
 recent_ver = ver_feat[0]
 newFeatures = ver_feat[1]
 # recent_ver = 11.11
-if (float(recent_ver) > 0):
+if float(recent_ver) > 0:
     updateVer(recent_ver)
     os.rename(PATH + str(recent_ver) + ".txt", PATH + str(recent_ver) + ".txt.bak")
 else:
