@@ -24,13 +24,14 @@ eng_ftxt = "New features:"
 eng_stxt = "here"
 
 # Path constants
-PATH = "koertner-muth/Support/RawBin/"
-HTMLFILE_DE = "koertner-muth/Contents/GLBW.html"
-HTMLFILE_EN = "koertner-muth/Contents/ELBW.html"
-tmpHTMLFILE_DE = "koertner-muth/Contents/tmpGLBW.html"
-tmpHTMLFILE_EN = "koertner-muth/Contents/tmpELBW.html"
-RSSFILE_DE = "de.rss"
-RSSFILE_EN = "en.rss"
+SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
+PATH = SCRIPT_PATH+"/koertner-muth/Support/RawBin/"
+HTMLFILE_DE = SCRIPT_PATH+"/koertner-muth/Contents/GLBW.html"
+HTMLFILE_EN = SCRIPT_PATH+"/koertner-muth/Contents/ELBW.html"
+tmpHTMLFILE_DE = SCRIPT_PATH+"/koertner-muth/Contents/tmpGLBW.html"
+tmpHTMLFILE_EN = SCRIPT_PATH+"/koertner-muth/Contents/tmpELBW.html"
+RSSFILE_DE = SCRIPT_PATH+"/de.rss"
+RSSFILE_EN = SCRIPT_PATH+"/en.rss"
 
 # URL
 supportURL = "http://www.koertner-muth.de/koertner-muth/Navi.cgi?Topic={0}"
@@ -52,7 +53,7 @@ def getVer(path):
         if filename.endswith(".txt"):
             # getting latest version number
             fileVer = '{0:.5f}'.format(float(filename[:-4]))
-            if float(fileVer) > recentVersion:
+            if float(fileVer) > float(recentVersion):
                 if recentVersion > 0:
                     os.rename(path + str(recentVersion) + ".txt", path + str(recentVersion) + ".txt.bak")
                 recentVersion = fileVer
@@ -73,7 +74,7 @@ def updateVer(Ver):
     """Ändere die angezeigte Version in RSS und HTML
     """
     setHTMLVer(Ver, "de_DE.utf8")
-    setHTMLVer(Ver, "en_IN")
+    setHTMLVer(Ver, "en_US.utf8")
     setRSSVer(Ver, "de")
     setRSSVer(Ver, "en")
 
@@ -82,7 +83,7 @@ def setHTMLVer(Ver, lang):
     """Andert die angezeigte Version in HTML
     """
     # formatting multi-lang strings
-    locale.setlocale(locale.LC_ALL, lang)  # for dateformatting
+    locale.setlocale(locale.LC_ALL, lang) # for dateformatting
     verTime = time.gmtime(os.path.getmtime(PATH + str(Ver) + ".txt"))  # time of latest version .txt
 
     formatVer = "{0:.3f}".format(float(Ver))[:-1]  # for truncating to having 2 decimal points
